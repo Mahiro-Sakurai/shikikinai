@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>敷金診断AI</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9fafb;
+            color: #111827;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #1f2937;
+            color: #fff;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #cbd5e1;
+            text-decoration: none;
+            margin-bottom: 12px;
+        }
+
+        .sidebar a:hover {
+            color: #fff;
+        }
+
+        .main {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .upload-box {
+            border: 2px dashed #94a3b8;
+            padding: 60px;
+            text-align: center;
+            border-radius: 12px;
+            background-color: #f1f5f9;
+        }
+
+        .upload-box input {
+            margin-top: 20px;
+        }
+
+        .question-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+
+        .question-btn {
+            background-color: #2563eb;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .question-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .response,
+        .template-box,
+        .upload-result {
+            background-color: #fff;
+            padding: 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 24px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>敷金診断AI</h2>
+            <a href="#" onclick="showSection('desc')">商品説明</a>
+            <a href="#" onclick="showSection('upload')">画像アップロードデモ</a>
+            <a href="#" onclick="showSection('faq')">質問デモ</a>
+            <a href="#" onclick="showSection('template')">テンプレート生成デモ</a>
+        </div>
+        <div class="main">
+            <div id="desc" class="section active">
+                <h1>商品説明</h1>
+                <p>敷金診断AIは、賃貸契約書や退去時請求書に基づき、AIがガイドラインと判例に照らして請求の妥当性を診断するサービスです。若年層や学生を主な対象とし、1回2,000円の買い切り型で、弁護士相談より安価に納得感のある判断材料を提供します。
+                </p>
+            </div>
+
+            <div id="upload" class="section">
+                <h1>画像アップロードデモ</h1>
+                <div class="upload-box">
+                    <p>賃貸契約書または退去請求書の画像をアップロードしてください。</p>
+                    <input type="file" accept="image/*" onchange="handleImageUpload()">
+                </div>
+                <div class="upload-result" id="uploadResult">
+                    <p><strong>診断結果:</strong></p>
+                    <p id="generatedResult">ファイルをアップロードすると自動で診断が表示されます。</p>
+                </div>
+            </div>
+
+            <div id="faq" class="section">
+                <h1>質問デモ（よくある質問）</h1>
+                <div class="question-list">
+                    <button class="question-btn" onclick="showAnswer('ハウスクリーニング')">ハウスクリーニング</button>
+                    <button class="question-btn" onclick="showAnswer('エアコン清掃')">エアコン清掃費用</button>
+                </div>
+                <div id="response" class="response">
+                    質問を選択すると、AIによる詳細な回答がここに表示されます。
+                </div>
+            </div>
+
+            <div id="template" class="section">
+                <h1>テンプレート生成デモ</h1>
+                <div class="template-box">
+                    <p><strong>例：交渉文テンプレート（壁紙請求に異議）</strong></p>
+                    <p>拝啓、貴社からご提示いただいた退去時の原状回復費用について、内容を確認させていただきました。中でも壁クロス全面張替え費用に関しては、国土交通省のガイドライン（平成23年改訂）においても経年劣化による借主負担の否定が明示されております。つきましては、再度ご検討の上、ご返信いただけますと幸いです。敬具
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sections = document.querySelectorAll('.section');
+        function showSection(id) {
+            sections.forEach(sec => sec.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function handleImageUpload() {
+            const result = document.getElementById("generatedResult");
+            result.innerHTML = `
+        <strong>【結論】</strong>「壁クロス全面張替え」などの一括請求は不当な場合があります。<br><br>
+        <strong>【診断詳細】</strong><br>
+        ガイドラインによると、通常使用による経年劣化や日焼けによる壁紙の変色・剥がれなどは借主の責任ではありません（P.18参照）。一方で、家具のぶつけ跡や落書きなど、明らかに通常使用の範囲を超える損耗については負担の可能性があります。ただし、全面張替えの必要性がない場合、請求は一部のみが妥当です。<br><br>
+        <strong>【判例解説】</strong><br>
+        東京簡裁平成28年9月の判例では、退去時に壁紙全面の張替え費用が請求されたが、実際の損傷箇所が全体の30%以下だったため、請求は大幅に減額されました。<br><br>
+        <strong>【非弁行為ではありません】</strong><br>
+        この診断結果は公的ガイドラインと一般公開された裁判例に基づく情報提供であり、弁護士による法律助言には該当しません。安心してご活用ください。
+      `;
+        }
+
+        function showAnswer(topic) {
+            const response = document.getElementById("response");
+            const answers = {
+                'ハウスクリーニング': `【ハウスクリーニング費用】<br><br>ガイドラインによると、通常の居住によって発生する汚れに関しては、貸主（オーナー）が負担するのが原則です。退去時に「ハウスクリーニング費用」として一律の請求がある場合、借主が特別に汚損した形跡がない限り、請求は妥当とは言えません。<br><br><strong>具体的には</strong>、ガイドライン（2021年改訂）において「通常の生活に伴う汚れやにおいについては、借主の原状回復義務に含まれない」と明記されています。<br><br><strong>判例では</strong>、東京簡裁平成25年9月の事案において、借主に明確な過失がない場合の一律請求は無効とされました。このため、契約書に特約がある場合も、ガイドラインに反する内容であれば無効とされることがあります。<br><br><strong>さらに</strong>、東京都住宅政策本部の見解によれば、原状回復とは「借主が借りたときの状態に戻すこと」ではなく、「通常使用による自然劣化を除いた状態への回復」であるとされており、ハウスクリーニングが必須とされる契約でも、それが借主負担であるかは慎重に判断されるべきです。<br><br><strong>非弁行為ではありません</strong>：当サービスは国土交通省のガイドラインおよび判例に基づいた情報提供であり、法的助言を目的とするものではありません。安心してご利用ください。<br><br><strong>出典：</strong> 国土交通省 原状回復をめぐるトラブルとガイドライン（2021年改訂版）／東京簡裁 平成25年9月の判例／東京都住宅政策本部『賃貸住宅トラブル防止ガイド』より抜粋。`
+                ,
+                'エアコン清掃': `【エアコン清掃費用】<br><br>エアコン内部の清掃費用については、原則として貸主負担とされています。国土交通省の『原状回復をめぐるトラブルとガイドライン』では、フィルター掃除程度は借主が行うべきものとされていますが、専門業者による内部洗浄など高度な清掃は借主負担とするには合理的理由が必要とされています。<br><br><strong>判例紹介：</strong>東京地裁平成27年4月では、借主に通常の使用しかなかったにもかかわらず業者清掃費用を全額請求したケースにおいて、「設備の維持管理は貸主の義務である」として、請求は棄却されました。<br><br><strong>特約がある場合：</strong>賃貸借契約に「エアコン清掃費用を借主負担とする」旨の記載があっても、借主に通常の使い方しかなかった場合は、その特約の有効性が否定される可能性があります（消費者契約法第10条）。<br><br><strong>非弁行為ではありません：</strong>これは判例・公的資料に基づいた情報提供であり、法的助言ではありません。安心してご活用ください。`
+            };
+            response.innerHTML = answers[topic] || "この項目については現在準備中です。";
+        }
+    </script>
+</body>
+
+</html>
